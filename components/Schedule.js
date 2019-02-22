@@ -80,7 +80,12 @@ async timePicker(index){
   };
 
   hasTime(dict) {
-    return dict.hasOwnProperty('time')
+    if (!(dict == undefined)) {
+      console.log(dict)
+      return dict.hasOwnProperty('time')
+    } else {
+      return true
+    }
 
   };
   
@@ -119,12 +124,22 @@ async timePicker(index){
 
   getData = async () => {
     try {
-      let retrievedItem =  await AsyncStorage.getItem('blocks');
-      let blocks = JSON.parse(retrievedItem);
-      console.log(`ASYNC STORAGE: ${JSON.stringify(blocks)}`) // debugging line
+        const storedBlocks = await AsyncStorage.getItem('blocks');
+        if (storedBlocks == null) {
+          console.log(`RETRIEVED NULL ON SCHEDULE`);
+        } else { // if there is data in storedBlocks
+          let blocks = JSON.parse(storedBlocks);
+          this.setState({blocks:blocks})
+          console.log(`ONLOAD DATA SCHEDULE: ${JSON.stringify(blocks)}`);
+        }
     } catch (error) {
-      console.log(error.message);
+        console.log(error)
     }
+  };
+
+  componentWillMount() {
+    this.getData()
+
   };
 
 render() {
